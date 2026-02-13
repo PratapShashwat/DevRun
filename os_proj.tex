@@ -1,0 +1,92 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{tabularx}
+
+% Title Configuration
+\title{\textbf{StackStore: A Secure Distributed Runtime Environment for Uncompiled Source Code}}
+\author{\textbf{Student Name: Shashwat Pratap Singh} \\ \textit{Department of Computer Science}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Abstract}
+The modern software distribution model is fragmented. While Source Code Management (SCM) systems like GitHub host millions of open-source tools, the \textbf{Runtime Environment} required to execute them is often complex, platform-dependent, and prone to "Dependency Hell."
+
+This project proposes \textbf{StackStore}, a runtime manager that utilizes OS-level virtualization to create ephemeral, isolated userspace environments. By leveraging containerization, the system allows end-users to execute uncompiled source code directly from remote repositories without modifying the host operating system’s state.
+
+\section{Problem Statement}
+\begin{enumerate}
+    \item \textbf{Dependency Conflicts:} Installing multiple developer tools often leads to version mismatches (e.g., Python 3.8 vs 3.11) on the host OS.
+    \item \textbf{Security Vulnerabilities:} Executing arbitrary scripts from open-source repositories poses a significant risk to the host file system.
+    \item \textbf{Resource Leakage:} Short-term applications frequently leave behind residual files and background processes after uninstallation.
+\end{enumerate}
+
+\section{Proposed Architecture}
+The system functions as an orchestration middleware between the Host Kernel and Remote Source Code.
+
+\subsection{Core Mechanism: Containerization \& Isolation}
+The application interacts with the \textbf{Docker Daemon} to spin up a micro-environment (Container) for every execution event.
+\begin{itemize}
+    \item \textbf{Namespace Isolation:} The application runs within its own Process ID (PID) namespace.
+    \item \textbf{File System Virtualization:} The application interacts with a virtual root file system; writes are Copy-on-Write (CoW).
+\end{itemize}
+
+\subsection{Automated Environment Configuration (AI-Assisted)}
+To handle the diversity of build systems, the system integrates a Large Language Model (LLM) agent to parse the repository structure and generate a \textbf{Deterministic Build Manifest} automatically.
+
+\section{Alignment with Operating System Concepts}
+\begin{enumerate}
+    \item \textbf{Process Management:} Handling child process spawning (\texttt{fork/exec}), signal propagation, and exit code analysis.
+    \item \textbf{Resource Allocation:} Defining CPU and Memory limits (via \texttt{cgroups}) to prevent host resource exhaustion.
+    \item \textbf{Inter-Process Communication (IPC):} Streaming \texttt{stdout} and \texttt{stderr} from the container to the host CLI.
+\end{enumerate}
+
+\section{Project Timeline (10 Weeks)}
+The timeline is adjusted to accommodate the academic calendar (including mid-semester examinations).
+
+\begin{table}[h]
+    \centering
+    \begin{tabularx}{\textwidth}{|l|X|}
+    \hline
+    \textbf{Timeframe} & \textbf{Key Milestones \& Deliverables} \\
+    \hline
+    \textbf{Week 0} & \textbf{Mid-Semester Examinations} (No Project Activity) \\
+    \hline
+    \textbf{Weeks 1-3} & \textbf{Phase 1: Core OS Interface} \newline
+    - Implement Node.js scripts to interface with Docker Daemon. \newline
+    - Develop `child_process` logic for container spawning and destruction. \\
+    \hline
+    \textbf{Weeks 4-6} & \textbf{Phase 2: Network \& File System} \newline
+    - Implement secure `git clone` into temporary cache directories. \newline
+    - Integrate LLM API to parse repository files and generate `stackstore.yaml`. \\
+    \hline
+    \textbf{Weeks 7-9} & \textbf{Phase 3: Integration \& CLI} \newline
+    - Connect Network module with Docker Runner. \newline
+    - Build a Command Line Interface (CLI) for user interaction. \\
+    \hline
+    \textbf{Week 10} & \textbf{Phase 4: Finalization} \newline
+    - Performance testing (container startup time). \newline
+    - Final Report and Demonstration. \\
+    \hline
+    \end{tabularx}
+    \caption{Implementation Schedule}
+\end{table}
+
+\section{Expected Outcome}
+A functioning CLI prototype capable of:
+\begin{enumerate}
+    \item Cloning a remote repository.
+    \item Building a secure, isolated runtime environment.
+    \item Executing the code and streaming Input/Output.
+    \item Performing a complete cleanup of the environment.
+\end{enumerate}
+
+\end{document}
