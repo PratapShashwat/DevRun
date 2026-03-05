@@ -20,37 +20,50 @@
 \section{Abstract}
 The modern software distribution model is fragmented. While Source Code Management (SCM) systems like GitHub host millions of open-source tools, the \textbf{Runtime Environment} required to execute them is often complex, platform-dependent, and prone to "Dependency Hell."
 
-This project proposes \textbf{StackStore}, a runtime manager that utilizes OS-level virtualization to create ephemeral, isolated userspace environments. By leveraging containerization, the system allows end-users to execute uncompiled source code directly from remote repositories without modifying the host operating system’s state.
+This project proposes \textbf{StackStore (Core Engine)}, a desktop runtime manager that utilizes OS-level virtualization to create ephemeral, isolated userspace environments on demand. By leveraging containerization technologies (Docker Engine), the system allows end-users to execute uncompiled source code (Python, Java, Node.js) directly from remote repositories without modifying the host operating system’s state.
+
+\section{Motivation \& Future Integration}
+The primary motivation for this project is to build the low-level \textbf{"Execution Engine"} for a larger, planned software ecosystem named \textbf{"StackStore"}.
+
+While the future "StackStore" application will feature a Graphical User Interface (GUI), Cloud Offloading, and an AI-driven "App Store" experience, this semester project focuses strictly on the \textbf{Systems Engineering} challenges:
+\begin{itemize}
+    \item Designing the process orchestration layer.
+    \item Implementing secure resource isolation.
+    \item Managing the lifecycle of transient containers.
+\end{itemize}
+This "Core Engine" will serve as the backend infrastructure for the future full-stack application.
 
 \section{Problem Statement}
 \begin{enumerate}
-    \item \textbf{Dependency Conflicts:} Installing multiple developer tools often leads to version mismatches (e.g., Python 3.8 vs 3.11) on the host OS.
-    \item \textbf{Security Vulnerabilities:} Executing arbitrary scripts from open-source repositories poses a significant risk to the host file system.
-    \item \textbf{Resource Leakage:} Short-term applications frequently leave behind residual files and background processes after uninstallation.
+    \item \textbf{Dependency Conflicts:} Installing multiple developer tools often leads to version mismatches (e.g., Python 3.8 vs 3.11) on the host OS, breaking existing workflows.
+    \item \textbf{Security Vulnerabilities:} Executing arbitrary scripts from open-source repositories poses a significant risk to the host file system and kernel integrity.
+    \item \textbf{Resource Leakage:} Short-term applications frequently leave behind residual files, registry keys, and background processes after uninstallation.
 \end{enumerate}
 
 \section{Proposed Architecture}
 The system functions as an orchestration middleware between the Host Kernel and Remote Source Code.
 
 \subsection{Core Mechanism: Containerization \& Isolation}
-The application interacts with the \textbf{Docker Daemon} to spin up a micro-environment (Container) for every execution event.
+Instead of traditional installation, the application interacts with the \textbf{Docker Daemon} to spin up a micro-environment (Container) for every execution event.
 \begin{itemize}
-    \item \textbf{Namespace Isolation:} The application runs within its own Process ID (PID) namespace.
-    \item \textbf{File System Virtualization:} The application interacts with a virtual root file system; writes are Copy-on-Write (CoW).
+    \item \textbf{Namespace Isolation:} The application runs within its own Process ID (PID) namespace, preventing it from viewing or terminating host processes.
+    \item \textbf{File System Virtualization:} The application interacts with a virtual root file system. All writes are Copy-on-Write (CoW) and are discarded instantly upon termination.
 \end{itemize}
 
-\subsection{Automated Environment Configuration (AI-Assisted)}
-To handle the diversity of build systems, the system integrates a Large Language Model (LLM) agent to parse the repository structure and generate a \textbf{Deterministic Build Manifest} automatically.
+\subsection{Automated Environment Configuration}
+To handle the diversity of build systems (Make, Gradle, NPM, Pip), the system integrates a deterministic parser to analyze the repository structure and generate a \textbf{Build Manifest}, automating the allocation of necessary libraries and binaries within the container.
 
 \section{Alignment with Operating System Concepts}
+This project is a practical implementation of key Operating System principles:
+
 \begin{enumerate}
-    \item \textbf{Process Management:} Handling child process spawning (\texttt{fork/exec}), signal propagation, and exit code analysis.
-    \item \textbf{Resource Allocation:} Defining CPU and Memory limits (via \texttt{cgroups}) to prevent host resource exhaustion.
-    \item \textbf{Inter-Process Communication (IPC):} Streaming \texttt{stdout} and \texttt{stderr} from the container to the host CLI.
+    \item \textbf{Process Management:} The backend acts as a hypervisor/supervisor, handling child process spawning (\texttt{fork/exec}), signal propagation (\texttt{SIGINT}, \texttt{SIGTERM}), and exit code analysis.
+    \item \textbf{Resource Allocation:} The system defines strict CPU and Memory limits (via \texttt{cgroups}) for each container to prevent a single application from exhausting host resources (handling the "Noisy Neighbor" problem).
+    \item \textbf{Inter-Process Communication (IPC):} The application streams \texttt{stdout} and \texttt{stderr} from the isolated container back to the host CLI via Unix Pipes or TCP Sockets for real-time user feedback.
 \end{enumerate}
 
 \section{Project Timeline (10 Weeks)}
-The timeline is adjusted to accommodate the academic calendar (including mid-semester examinations).
+The development lifecycle is adjusted to accommodate the academic calendar (including mid-semester examinations).
 
 \begin{table}[h]
     \centering
@@ -61,20 +74,21 @@ The timeline is adjusted to accommodate the academic calendar (including mid-sem
     \textbf{Week 0} & \textbf{Mid-Semester Examinations} (No Project Activity) \\
     \hline
     \textbf{Weeks 1-3} & \textbf{Phase 1: Core OS Interface} \newline
-    - Implement Node.js scripts to interface with Docker Daemon. \newline
-    - Develop `child_process` logic for container spawning and destruction. \\
+    - Implementation of Node.js scripts to interface with Docker Daemon. \newline
+    - Development of `child\_process` logic for container spawning and destruction. \newline
+    - Implementation of Signal Handling for graceful shutdown. \\
     \hline
     \textbf{Weeks 4-6} & \textbf{Phase 2: Network \& File System} \newline
-    - Implement secure `git clone` into temporary cache directories. \newline
-    - Integrate LLM API to parse repository files and generate `stackstore.yaml`. \\
+    - Integration of Git for secure repository cloning to temporary cache. \newline
+    - Implementation of file system mounting (Host $\leftrightarrow$ Container) for input/output data persistence. \\
     \hline
     \textbf{Weeks 7-9} & \textbf{Phase 3: Integration \& CLI} \newline
-    - Connect Network module with Docker Runner. \newline
-    - Build a Command Line Interface (CLI) for user interaction. \\
+    - Connecting the Network/Fetcher module with the OS Runner. \newline
+    - Building a Command Line Interface (CLI) for user interaction and real-time log streaming (IPC). \\
     \hline
-    \textbf{Week 10} & \textbf{Phase 4: Finalization} \newline
-    - Performance testing (container startup time). \newline
-    - Final Report and Demonstration. \\
+    \textbf{Week 10} & \textbf{Phase 4: Optimization \& Finalization} \newline
+    - Performance testing (optimizing container startup latency). \newline
+    - Final Report writing and Live Demonstration. \\
     \hline
     \end{tabularx}
     \caption{Implementation Schedule}
@@ -83,10 +97,10 @@ The timeline is adjusted to accommodate the academic calendar (including mid-sem
 \section{Expected Outcome}
 A functioning CLI prototype capable of:
 \begin{enumerate}
-    \item Cloning a remote repository.
-    \item Building a secure, isolated runtime environment.
-    \item Executing the code and streaming Input/Output.
-    \item Performing a complete cleanup of the environment.
+    \item Cloning a remote repository via Git.
+    \item Building a secure, isolated runtime environment based on the detected language.
+    \item Executing the code and streaming Input/Output to the user interface.
+    \item Performing a complete "Garbage Collection" of the environment post-execution.
 \end{enumerate}
 
 \end{document}
