@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "project_name": "azure-search-openai-demo",
+  "workspace": {
+    "root_fs": "/var/lib/stackstore/environments/azure-search-openai-demo",
+    "network": {
+      "exposed_ports": [
+        50505,
+        5173
+      ],
+      "internal_routing": true
+    }
+  },
+  "services": [
+    {
+      "service_name": "backend",
+      "context_dir": "app/backend",
+      "runtime": {
+        "language": "python",
+        "version": "3.10",
+        "manager": "pip"
+      },
+      "commands": {
+        "install": "pip install -r requirements.txt",
+        "build": null,
+        "start": "uvicorn app:app --host 0.0.0.0 --port 50505"
+      },
+      "env_vars": {
+        "AZURE_OPENAI_ENDPOINT": "<REQUIRED_USER_INPUT>",
+        "AZURE_OPENAI_KEY": "<REQUIRED_USER_INPUT>",
+        "AZURE_SEARCH_ENDPOINT": "<REQUIRED_USER_INPUT>",
+        "AZURE_SEARCH_KEY": "<REQUIRED_USER_INPUT>"
+      }
+    },
+    {
+      "service_name": "frontend",
+      "context_dir": "app/frontend",
+      "runtime": {
+        "language": "typescript",
+        "version": "20.0.0",
+        "manager": "npm"
+      },
+      "commands": {
+        "install": "npm install",
+        "build": "tsc && vite build",
+        "start": "npm run dev"
+      },
+      "env_vars": {
+        "VITE_BACKEND_URI": "http://localhost:50505"
+      }
+    }
+  ]
+}

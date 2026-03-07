@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "project_name": "string",
+  "workspace": {
+    "root_fs": "/var/lib/stackstore/environments/[repo-name]",
+    "network": {
+      "exposed_ports": ["integer"],
+      "internal_routing": true
+    }
+  },
+  "services": [
+    {
+      "service_name": "string",
+      "context_dir": "string",
+      "runtime": {
+        "language": "string",
+        "version": "string",
+        "manager": "string"
+      },
+      "commands": {
+        "install": "string or null",
+        "build": "string or null",
+        "start": "string"
+      },
+      "env_vars": {
+        "KEY": "VALUE or <REQUIRED_USER_INPUT>"
+      }
+    }
+  ]
+}

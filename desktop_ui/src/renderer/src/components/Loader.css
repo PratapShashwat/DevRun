@@ -1,0 +1,83 @@
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #0d1117;
+  color: #c9d1d9;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Premium Glowing Spinner */
+.spinner {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 4px solid #30363d;
+  border-top-color: #58a6ff;
+  border-right-color: #bd561d;
+  animation: spin 1.2s linear infinite, glow 2s ease-in-out infinite alternate;
+  margin-bottom: 2rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 10px rgba(88, 166, 255, 0.2); }
+  to { box-shadow: 0 0 20px rgba(88, 166, 255, 0.6); }
+}
+
+.loader-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0 0 1.5rem 0;
+  color: #ffffff;
+}
+
+/* Terminal Status styling */
+.terminal-status {
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  font-family: "Fira Code", "Courier New", Courier, monospace; /* Monospace for terminal feel */
+  font-size: 0.95rem;
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.prompt {
+  color: #2ea043;
+  font-weight: bold;
+}
+
+.phrase {
+  color: #8b949e;
+  animation: fade 0.3s ease-in-out;
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1.2em;
+  background-color: #58a6ff;
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes fade {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

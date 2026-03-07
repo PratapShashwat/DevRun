@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "project_name": "Maze-X",
+  "workspace": {
+    "root_fs": "/var/lib/stackstore/environments/Maze-X",
+    "network": {
+      "exposed_ports": [],
+      "internal_routing": true
+    }
+  },
+  "services": [
+    {
+      "service_name": "arduino-robot-logic",
+      "context_dir": ".",
+      "runtime": {
+        "language": "C++",
+        "version": "N/A",
+        "manager": "arduino-cli"
+      },
+      "commands": {
+        "install": "arduino-cli lib install Servo",
+        "build": "arduino-cli compile --fqbn arduino:avr:uno .",
+        "start": null
+      },
+      "env_vars": {}
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+# ========================
+# StackStore .gitignore
+# ========================
+
+# 1. Security (NEVER UPLOAD THESE)
+.env
+*.key
+*.pem
+
+# 2. Python Backend (ai_brain)
+ai_brain/venv/
+ai_brain/__pycache__/
+*.pyc
+ai_brain/*_stackspec.json
+
+# 3. Node.js Frontend (desktop_ui)
+desktop_ui/node_modules/
+desktop_ui/dist/
+desktop_ui/out/
+desktop_ui/build/
+npm-debug.log
+
+# 4. OS/System Files
+.DS_Store
+Thumbs.db
+
+# 5. Generated User Environments (DO NOT UPLOAD USER WORKSPACES)
+environments/
+final_boot_spec.json

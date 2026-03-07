@@ -1,0 +1,146 @@
+.url-input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #0d1117; /* GitHub Dark background */
+  color: #c9d1d9;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(90deg, #58a6ff, #bd561d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header p {
+  font-size: 1.2rem;
+  color: #8b949e;
+  margin-top: 0.5rem;
+}
+
+.input-form {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  max-width: 600px;
+  padding: 0 1rem;
+}
+
+.url-field {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  color: #c9d1d9;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.url-field:focus {
+  border-color: #58a6ff;
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
+}
+
+.submit-btn {
+  padding: 0 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background-color: #238636;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submit-btn:hover {
+  background-color: #2ea043;
+}
+
+.error-message {
+  color: #f85149;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Add this to the bottom of your existing UrlInput.css */
+
+.secrets-layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.scrollable-form {
+  max-height: 50vh;
+  overflow-y: auto;
+  padding-right: 10px;
+  margin-bottom: 1.5rem;
+}
+
+/* Custom slick scrollbar for dark mode */
+.scrollable-form::-webkit-scrollbar {
+  width: 8px;
+}
+.scrollable-form::-webkit-scrollbar-track {
+  background: #0d1117; 
+  border-radius: 4px;
+}
+.scrollable-form::-webkit-scrollbar-thumb {
+  background: #30363d; 
+  border-radius: 4px;
+}
+.scrollable-form::-webkit-scrollbar-thumb:hover {
+  background: #8b949e; 
+}
+
+.service-group {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #21262d;
+}
+
+.service-group:last-child {
+  border-bottom: none;
+}
+
+.service-title {
+  font-size: 1.1rem;
+  color: #58a6ff;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.error-panel {
+  margin-top: 1.5rem;
+  padding: 1rem 1.5rem;
+  background-color: rgba(248, 81, 73, 0.1);
+  border: 1px solid rgba(248, 81, 73, 0.4);
+  border-radius: 8px;
+  color: #ff7b72;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  animation: fade 0.3s ease-in-out;
+}
