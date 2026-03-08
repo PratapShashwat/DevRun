@@ -1,6 +1,6 @@
+const { spawn } = require('child_process')
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
-import { spawn } from 'child_process'
 import fs from 'fs'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -46,27 +46,26 @@ app.whenReady().then(() => {
 
   ipcMain.handle('save-final-spec', async (event, stackSpec) => {
     try {
-      // 1. Grab the project name from the JSON
       const projectName = stackSpec.project_name || 'unnamed_project'
-      
-      // 2. Create a dedicated 'environments' folder in our root directory
       const envsDir = join(__dirname, '../../../environments')
-      if (!fs.existsSync(envsDir)) {
-        fs.mkdirSync(envsDir) // Automatically create the folder if it doesn't exist
-      }
+      if (!fs.existsSync(envsDir)) fs.mkdirSync(envsDir)
       
-      // 3. Save the file cleanly using the project name
       const outputPath = join(envsDir, `${projectName}_spec.json`)
       fs.writeFileSync(outputPath, JSON.stringify(stackSpec, null, 2))
       
       console.log(`[SUCCESS] Blueprint saved to: ${outputPath}`)
       
-      // THE FINAL HANDOFF TO YOUR C++ ENGINE (You will uncomment this later!)
-      /*
-      console.log(`Spawning StackStore Engine...`)
-      const enginePath = join(__dirname, '../../../engine/stackstore-engine.exe')
-      const engineProcess = spawn(enginePath, ['--config', outputPath])
-      */
+      // --- THE GRAND CONNECTION ---
+      const enginePath = join(__dirname, '../../../engine/stackstore-engine')
+      
+      console.log(`Spawning C++ Engine via pkexec...`)
+      // pkexec triggers a native Ubuntu GUI password prompt for root access
+      const engineProcess = spawn('pkexec', [enginePath, outputPath])
+
+      // Pipe the C++ terminal output directly into your Node.js console!
+      engineProcess.stdout.on('data', (data) => console.log(`[C++] ${data}`))
+      engineProcess.stderr.on('data', (data) => console.error(`[C++ ERROR] ${data}`))
+      // ----------------------------
 
       return { success: true, path: outputPath }
     } catch (err) {
