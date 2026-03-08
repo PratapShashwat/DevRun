@@ -1,0 +1,13 @@
+{
+  "project_name": "ubuntu-test",
+  "root_fs": "/tmp/stackstore/ubuntu-test",
+  "services": [
+    {
+      "service_name": "test-service",
+      "start": "pwd && echo 'Hello from the Sandbox!' > proof.txt && ls -la",
+      "runtime": {
+        "language": "node"
+      }
+    }
+  ]
+}
