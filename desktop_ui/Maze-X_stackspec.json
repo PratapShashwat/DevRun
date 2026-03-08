@@ -10,19 +10,21 @@
   },
   "services": [
     {
-      "service_name": "arduino-robot-logic",
+      "service_name": "arduino-firmware",
       "context_dir": ".",
       "runtime": {
         "language": "C++",
-        "version": "N/A",
-        "manager": "arduino-cli"
+        "version": "Arduino",
+        "manager": "Arduino IDE"
       },
       "commands": {
-        "install": "arduino-cli lib install Servo",
+        "install": null,
         "build": "arduino-cli compile --fqbn arduino:avr:uno .",
-        "start": null
+        "start": "arduino-cli upload --fqbn arduino:avr:uno -p \"$ARDUINO_PORT\" ."
       },
-      "env_vars": {}
+      "env_vars": {
+        "ARDUINO_PORT": "<REQUIRED_USER_INPUT>"
+      }
     }
   ]
 }

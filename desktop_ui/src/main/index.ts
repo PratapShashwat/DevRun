@@ -75,6 +75,32 @@ app.whenReady().then(() => {
     }
   })
 
+  // Read all saved StackSpecs from the disk
+  ipcMain.handle('get-saved-environments', async () => {
+    try {
+      const envsDir = join(__dirname, '../../../environments')
+      
+      // If the folder doesn't exist yet, return an empty list
+      if (!fs.existsSync(envsDir)) {
+        return { success: true, data: [] }
+      }
+
+      // Find all JSON files in the folder
+      const files = fs.readdirSync(envsDir).filter(f => f.endsWith('_spec.json'))
+      
+      // Parse them and send them back to React
+      const savedEnvs = files.map(file => {
+        const rawData = fs.readFileSync(join(envsDir, file), 'utf8')
+        return JSON.parse(rawData)
+      })
+
+      return { success: true, data: savedEnvs }
+    } catch (err) {
+      console.error("Failed to read saved environments:", err)
+      return { success: false, error: err.message }
+    }
+  })
+
   // ADD THIS BLOCK: The listener that executes your Python script
   ipcMain.handle('run-python-orchestrator', async (event, githubUrl) => {
     return new Promise((resolve, reject) => {
@@ -129,6 +155,32 @@ const pythonScript = join(__dirname, '../../../ai_brain/main.py')
       })
     })
   })
+
+  ipcMain.handle('delete-environment', async (event, projectName) => {
+    try {
+      const envsDir = join(__dirname, '../../../environments')
+      const jsonFile = join(envsDir, `${projectName}_spec.json`)
+      
+      // 1. Delete the JSON blueprint
+      if (fs.existsSync(jsonFile)) {
+        fs.unlinkSync(jsonFile)
+      }
+
+      // 2. Delete the actual sandbox folder (The root_fs)
+      const rootFsFolder = join(envsDir, projectName)
+      if (fs.existsSync(rootFsFolder)) {
+        // recursive: true deletes the folder and everything inside it
+        fs.rmSync(rootFsFolder, { recursive: true, force: true }) 
+      }
+      
+      console.log(`[CLEANUP] Successfully deleted environment data for: ${projectName}`)
+      return { success: true }
+    } catch (err) {
+      console.error("Failed to delete environment:", err)
+      return { success: false, error: err.message }
+    }
+  })
+
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
   // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils

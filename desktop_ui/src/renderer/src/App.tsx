@@ -31,6 +31,12 @@ function App() {
     }
   }
 
+  const handleResume = (savedSpec) => {
+    console.log("Resuming saved environment:", savedSpec.project_name)
+    setStackSpec(savedSpec)
+    setCurrentStep('booting') // Go straight to the dashboard!
+  }
+
   const handleLaunch = async (finalSpec) => {
     setCurrentStep('booting')
     
@@ -48,17 +54,31 @@ function App() {
     setCurrentStep('input') // Send them back to the start screen
   }
 
-  const handleDelete = () => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this environment and all its files from your hard drive?")
-    if (confirmDelete) {
-      console.log("Telling Node.js to delete the folder...")
-      setCurrentStep('input')
+  const handleDelete = async () => {
+    const projectName = stackSpec?.project_name || 'unnamed_project'
+    
+    // We already confirmed in the UI, just run the backend command!
+    const response = await window.api.deleteEnvironment(projectName)
+    
+    if (response.success) {
+      console.log("Environment safely wiped from disk.")
+      setStackSpec(null)
+      setCurrentStep('input') 
+    } else {
+      setBackendError("Failed to delete the environment files.")
+      setCurrentStep('input') // Route the error to our premium error panel
     }
   }
 
   return (
     <>
-      {currentStep === 'input' && <UrlInput onSubmit={handleUrlSubmit} externalError={backendError} />}
+      {currentStep === 'input' && (
+        <UrlInput 
+          onSubmit={handleUrlSubmit} 
+          onResume={handleResume} 
+          externalError={backendError} 
+        />
+      )}
       {currentStep === 'loading' && <Loader />}
       {currentStep === 'secrets' && <SecretsForm stackSpec={stackSpec} onLaunch={handleLaunch} />}
       

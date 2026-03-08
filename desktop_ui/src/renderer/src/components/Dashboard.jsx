@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './UrlInput.css'
 
 export default function Dashboard({ stackSpec, onStop, onDelete }) {
-  // Extract project info safely
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false) // NEW STATE
+
   const projectName = stackSpec?.project_name || "Unknown Project"
   const ports = stackSpec?.workspace?.network?.exposed_ports || []
 
@@ -35,31 +36,54 @@ export default function Dashboard({ stackSpec, onStop, onDelete }) {
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-          <button 
-            className="submit-btn" 
-            style={{ flex: 1, backgroundColor: '#21262d', border: '1px solid #30363d' }}
-            onClick={() => alert("This would open VS Code pointing to the bind-mount folder!")}
-          >
-            🧑‍💻 Open in IDE
-          </button>
-          
-          <button 
-            className="submit-btn" 
-            style={{ flex: 1, backgroundColor: '#8b949e', color: '#0d1117' }}
-            onClick={onStop}
-          >
-            ⏸️ Stop Engine
-          </button>
-          
-          <button 
-            className="submit-btn" 
-            style={{ flex: 1, backgroundColor: 'transparent', border: '1px solid #f85149', color: '#f85149' }}
-            onClick={onDelete}
-          >
-            🗑️ Delete Files
-          </button>
-        </div>
+        {/* INLINE CONFIRMATION UI */}
+        {showDeleteConfirm ? (
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', padding: '1rem', backgroundColor: 'rgba(248, 81, 73, 0.1)', border: '1px solid #f85149', borderRadius: '8px', alignItems: 'center' }}>
+            <div style={{ flex: 1, color: '#ff7b72', fontSize: '0.95rem' }}>
+              <strong>Warning:</strong> This permanently deletes all environment files from your hard drive.
+            </div>
+            <button 
+              className="submit-btn" 
+              style={{ backgroundColor: '#21262d', border: '1px solid #30363d' }} 
+              onClick={() => setShowDeleteConfirm(false)}
+            >
+              Cancel
+            </button>
+            <button 
+              className="submit-btn" 
+              style={{ backgroundColor: '#da3633', color: 'white' }} 
+              onClick={onDelete}
+            >
+              Yes, Delete
+            </button>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+            <button 
+              className="submit-btn" 
+              style={{ flex: 1, backgroundColor: '#21262d', border: '1px solid #30363d' }}
+              onClick={() => alert("This would open VS Code pointing to the bind-mount folder!")}
+            >
+              🧑‍💻 Open in IDE
+            </button>
+            
+            <button 
+              className="submit-btn" 
+              style={{ flex: 1, backgroundColor: '#8b949e', color: '#0d1117' }}
+              onClick={onStop}
+            >
+              ⏸️ Stop Engine
+            </button>
+            
+            <button 
+              className="submit-btn" 
+              style={{ flex: 1, backgroundColor: 'transparent', border: '1px solid #f85149', color: '#f85149' }}
+              onClick={() => setShowDeleteConfirm(true)}
+            >
+              🗑️ Delete Files
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )

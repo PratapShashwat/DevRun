@@ -23,13 +23,16 @@
       "commands": {
         "install": "pip install -r requirements.txt",
         "build": null,
-        "start": "uvicorn app:app --host 0.0.0.0 --port 50505"
+        "start": "./start.sh"
       },
       "env_vars": {
-        "AZURE_OPENAI_ENDPOINT": "<REQUIRED_USER_INPUT>",
         "AZURE_OPENAI_KEY": "<REQUIRED_USER_INPUT>",
+        "AZURE_OPENAI_ENDPOINT": "<REQUIRED_USER_INPUT>",
+        "AZURE_SEARCH_KEY": "<REQUIRED_USER_INPUT>",
         "AZURE_SEARCH_ENDPOINT": "<REQUIRED_USER_INPUT>",
-        "AZURE_SEARCH_KEY": "<REQUIRED_USER_INPUT>"
+        "AZURE_STORAGE_ACCOUNT_KEY": "<REQUIRED_USER_INPUT>",
+        "AZURE_STORAGE_ACCOUNT_NAME": "<REQUIRED_USER_INPUT>",
+        "APPLICATIONINSIGHTS_CONNECTION_STRING": "<REQUIRED_USER_INPUT>"
       }
     },
     {
@@ -37,17 +40,15 @@
       "context_dir": "app/frontend",
       "runtime": {
         "language": "typescript",
-        "version": "20.0.0",
+        "version": "20",
         "manager": "npm"
       },
       "commands": {
         "install": "npm install",
-        "build": "tsc && vite build",
+        "build": "npm run build",
         "start": "npm run dev"
       },
-      "env_vars": {
-        "VITE_BACKEND_URI": "http://localhost:50505"
-      }
+      "env_vars": {}
     }
   ]
 }
