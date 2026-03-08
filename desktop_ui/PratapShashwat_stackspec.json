@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "project_name": "PratapShashwat",
+  "workspace": {
+    "root_fs": "/var/lib/stackstore/environments/PratapShashwat",
+    "network": {
+      "exposed_ports": [],
+      "internal_routing": true
+    }
+  },
+  "services": []
+}

@@ -35,15 +35,7 @@ def main():
     stack_spec = generate_stack_spec(files, repo)
 
     if stack_spec:
-        # Step 3: Handoff to the OS layer
-        output_file = f"{repo}_stackspec.json"
-        
-        with open(output_file, "w") as f:
-            json.dump(stack_spec, f, indent=2)
-
         print(f"\n[SUCCESS] StackSpec generated perfectly!")
-        print(f"[+] Saved locally as: {output_file}")
-        
         print("\n--- Final JSON Output ---")
         print(json.dumps(stack_spec, indent=2))
     else:

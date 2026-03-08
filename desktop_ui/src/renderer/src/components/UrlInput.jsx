@@ -61,10 +61,27 @@ export default function UrlInput({ onSubmit, onResume, externalError }) {
 
       {/* SECTION 2: Saved Workspaces */}
       {savedEnvs.length > 0 && (
-        <div style={{ width: '100%', maxWidth: '600px', borderTop: '1px solid #30363d', paddingTop: '2rem' }}>
-          <h3 style={{ color: '#8b949e', marginBottom: '1rem' }}>Saved Workspaces</h3>
+        <div style={{ 
+          width: '100%', 
+          maxWidth: '600px', 
+          borderTop: '1px solid #30363d', 
+          paddingTop: '2rem',
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,          /* Take up the remaining screen space */
+          minHeight: 0,     /* CRITICAL: Forces flexbox to allow scrolling inside */
+          paddingBottom: '2rem'
+        }}>
+          <h3 style={{ color: '#8b949e', marginBottom: '1rem', flexShrink: 0 }}>Saved Workspaces</h3>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className="scrollable-form" style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            overflowY: 'auto',
+            flex: 1,        /* Fill the parent and scroll */
+            paddingRight: '8px'
+          }}>
             {savedEnvs.map((env, index) => (
               <div 
                 key={index} 
@@ -76,7 +93,7 @@ export default function UrlInput({ onSubmit, onResume, externalError }) {
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  transition: 'border-color 0.2s'
+                  flexShrink: 0 /* Prevents the cards from squishing */
                 }}
               >
                 <div>
