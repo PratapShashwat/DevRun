@@ -5,7 +5,6 @@ export default function SecretsForm({ stackSpec, onLaunch }) {
   const [groupedSecrets, setGroupedSecrets] = useState({})
   const [formValues, setFormValues] = useState({})
 
-  // Scan and group the missing secrets by service name
   useEffect(() => {
     const groups = {}
     
@@ -48,7 +47,6 @@ export default function SecretsForm({ stackSpec, onLaunch }) {
     onLaunch(finalSpec)
   }
 
-  // If no secrets are missing
   if (Object.keys(groupedSecrets).length === 0) {
     return (
       <div className="url-input-container">

@@ -6,7 +6,6 @@ export default function UrlInput({ onSubmit, onResume, externalError }) {
   const [localError, setLocalError] = useState('')
   const [savedEnvs, setSavedEnvs] = useState([])
 
-  // Load saved environments when the component mounts
   useEffect(() => {
     const loadEnvs = async () => {
       const response = await window.api.getSavedEnvironments()
@@ -32,7 +31,6 @@ export default function UrlInput({ onSubmit, onResume, externalError }) {
   return (
     <div className="url-input-container" style={{ justifyContent: 'flex-start', paddingTop: '10vh' }}>
       
-      {/* SECTION 1: Create New */}
       <div className="header">
         <h1>StackStore</h1>
         <p>Instant, AI-generated environments.</p>
@@ -59,7 +57,6 @@ export default function UrlInput({ onSubmit, onResume, externalError }) {
         </div>
       )}
 
-      {/* SECTION 2: Saved Workspaces */}
       {savedEnvs.length > 0 && (
         <div style={{ 
           width: '100%', 
@@ -68,8 +65,8 @@ export default function UrlInput({ onSubmit, onResume, externalError }) {
           paddingTop: '2rem',
           display: 'flex',
           flexDirection: 'column',
-          flex: 1,          /* Take up the remaining screen space */
-          minHeight: 0,     /* CRITICAL: Forces flexbox to allow scrolling inside */
+          flex: 1,          
+          minHeight: 0,     
           paddingBottom: '2rem'
         }}>
           <h3 style={{ color: '#8b949e', marginBottom: '1rem', flexShrink: 0 }}>Saved Workspaces</h3>
@@ -79,7 +76,7 @@ export default function UrlInput({ onSubmit, onResume, externalError }) {
             flexDirection: 'column', 
             gap: '1rem',
             overflowY: 'auto',
-            flex: 1,        /* Fill the parent and scroll */
+            flex: 1,        
             paddingRight: '8px'
           }}>
             {savedEnvs.map((env, index) => (
@@ -93,7 +90,7 @@ export default function UrlInput({ onSubmit, onResume, externalError }) {
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  flexShrink: 0 /* Prevents the cards from squishing */
+                  flexShrink: 0 
                 }}
               >
                 <div>

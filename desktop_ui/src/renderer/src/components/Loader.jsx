@@ -4,7 +4,6 @@ import './Loader.css'
 export default function Loader() {
   const [phraseIndex, setPhraseIndex] = useState(0)
   
-  // The sequence of statuses the user will see
   const loadingPhrases = [
     "Initializing AI orchestration engine...",
     "Cloning repository metadata...",
@@ -14,7 +13,6 @@ export default function Loader() {
   ]
 
   useEffect(() => {
-    // Cycle to the next phrase every 2 seconds
     const interval = setInterval(() => {
       setPhraseIndex((prev) => (prev + 1) % loadingPhrases.length)
     }, 2000)

@@ -76,8 +76,6 @@
   font-size: 0.9rem;
 }
 
-/* Add this to the bottom of your existing UrlInput.css */
-
 .secrets-layout {
   display: flex;
   flex-direction: column;

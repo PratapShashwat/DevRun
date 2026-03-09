@@ -18,7 +18,6 @@ def load_schema_template():
         print("[!] Error: schema_v1.json file not found.")
         return "{}"
 
-# --- THE PROMPT ---
 SYSTEM_PROMPT = f"""
 You are the AI Orchestrator for StackStore, a local desktop application that creates instant, isolated development environments using OS-level virtualization.
 Your task is to analyze raw configuration files from a GitHub repository and generate a strict "StackSpec" JSON configuration.
@@ -41,7 +40,7 @@ def generate_stack_spec(extracted_files_dict, repo_name):
     user_content += "Generate the StackSpec JSON matching the v1.0 schema:"
 
     # ==========================================
-    # CURRENT ENGINE: GOOGLE GEMINI (DEV MODE)
+    # CURRENT ENGINE: GOOGLE GEMINI (gemini-2.5-flash)
     # ==========================================
     print("[*] Routing request to Gemini API (google-genai)...")
     
@@ -66,8 +65,7 @@ def generate_stack_spec(extracted_files_dict, repo_name):
         return None
 
     # ==========================================
-    # FUTURE ENGINE: AZURE OPENAI (HACKATHON MODE)
-    # Uncomment this block and comment out the Gemini block above
+    # FUTURE ENGINE: AZURE OPENAI   (GPT-4o) 
     # ==========================================
     """
     print("[*] Routing request to Azure OpenAI (GPT-4o)...")

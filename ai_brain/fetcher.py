@@ -29,8 +29,7 @@ def fetch_dependency_files_smart(owner, repo):
         return extracted_data
 
     print(f"\nScanning repository tree for {owner}/{repo} on branch '{branch}'...")
-    
-    # The '?recursive=1' parameter gets the whole tree in one go
+
     tree_url = f"https://api.github.com/repos/{owner}/{repo}/git/trees/{branch}?recursive=1"
     response = requests.get(tree_url)
     
@@ -40,7 +39,6 @@ def fetch_dependency_files_smart(owner, repo):
 
     tree = response.json().get("tree", [])
     
-    # Filter for our target files, ignoring files deeply buried in things like node_modules
     matched_paths = [
         item["path"] for item in tree 
         if item["type"] == "blob" and 
@@ -54,14 +52,12 @@ def fetch_dependency_files_smart(owner, repo):
 
     print(f"[+] Found {len(matched_paths)} relevant configuration file(s). Fetching contents...\n")
 
-    # Fetch the actual text content for each matched file
     headers = {"Accept": "application/vnd.github.v3.raw"}
     for path in matched_paths:
         raw_url = f"https://api.github.com/repos/{owner}/{repo}/contents/{path}"
         file_resp = requests.get(raw_url, headers=headers)
         if file_resp.status_code == 200:
             print(f"  -> Downloaded: {path}")
-            # We store it with its full path (e.g., 'backend/requirements.txt') so the AI knows its context
             extracted_data[path] = file_resp.text
 
     return extracted_data

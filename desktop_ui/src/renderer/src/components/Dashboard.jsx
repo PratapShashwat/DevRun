@@ -36,7 +36,7 @@ export default function Dashboard({ stackSpec, onStop, onDelete }) {
           </div>
         </div>
 
-        {/* INLINE CONFIRMATION UI */}
+        
         {showDeleteConfirm ? (
           <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', padding: '1rem', backgroundColor: 'rgba(248, 81, 73, 0.1)', border: '1px solid #f85149', borderRadius: '8px', alignItems: 'center' }}>
             <div style={{ flex: 1, color: '#ff7b72', fontSize: '0.95rem' }}>

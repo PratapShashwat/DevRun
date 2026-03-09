@@ -8,11 +8,10 @@ function App() {
   const [currentStep, setCurrentStep] = useState('input') 
   const [stackSpec, setStackSpec] = useState(null)
   
-  // NEW: State to hold our backend errors
   const [backendError, setBackendError] = useState('')
 
   const handleUrlSubmit = async (url) => {
-    setBackendError('') // Clear old errors
+    setBackendError('') 
     setCurrentStep('loading')
     
     try {
@@ -22,7 +21,7 @@ function App() {
         setStackSpec(response.data)
         setCurrentStep('secrets') 
       } else {
-        setBackendError(response.error) // Set the error state instead of alerting!
+        setBackendError(response.error) 
         setCurrentStep('input')
       }
     } catch (error) {
@@ -34,7 +33,7 @@ function App() {
   const handleResume = (savedSpec) => {
     console.log("Resuming saved environment:", savedSpec.project_name)
     setStackSpec(savedSpec)
-    setCurrentStep('booting') // Go straight to the dashboard!
+    setCurrentStep('booting') 
   }
 
   const handleLaunch = async (finalSpec) => {
@@ -51,13 +50,12 @@ function App() {
 
   const handleStop = () => {
     console.log("Sending kill signal to C++ engine...")
-    setCurrentStep('input') // Send them back to the start screen
+    setCurrentStep('input') 
   }
 
   const handleDelete = async () => {
     const projectName = stackSpec?.project_name || 'unnamed_project'
     
-    // We already confirmed in the UI, just run the backend command!
     const response = await window.api.deleteEnvironment(projectName)
     
     if (response.success) {
@@ -66,7 +64,7 @@ function App() {
       setCurrentStep('input') 
     } else {
       setBackendError("Failed to delete the environment files.")
-      setCurrentStep('input') // Route the error to our premium error panel
+      setCurrentStep('input') 
     }
   }
 
@@ -82,7 +80,6 @@ function App() {
       {currentStep === 'loading' && <Loader />}
       {currentStep === 'secrets' && <SecretsForm stackSpec={stackSpec} onLaunch={handleLaunch} />}
       
-      {/* NEW DASHBOARD VIEW */}
       {currentStep === 'booting' && (
          <Dashboard 
            stackSpec={stackSpec} 
