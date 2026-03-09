@@ -1,34 +1,18 @@
-# desktop_ui
+# 🖥️ StackStore: Desktop UI (`desktop_ui`)
 
-An Electron application with React and TypeScript
+## Overview
+The Desktop UI is the user-facing control panel for StackStore, built with React and Electron. It provides a sleek, cross-platform interface for developers to input GitHub repositories, manage missing environment variables securely, and trigger the AI orchestration pipeline.
 
-## Recommended IDE Setup
+## Architecture
+* **Frontend (React):** Handles state management, UI rendering, and capturing user inputs for missing secrets.
+* **Backend (Electron/Node.js):** Acts as the local bridge. It uses IPC (Inter-Process Communication) and `child_process` to seamlessly trigger the Python `ai_brain` and pass the resulting JSON blueprint to the C++ `engine`.
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+## Setup & Execution
 
-## Project Setup
+\`\`\`bash
+# Install dependencies
+npm install
 
-### Install
-
-```bash
-$ npm install
-```
-
-### Development
-
-```bash
-$ npm run dev
-```
-
-### Build
-
-```bash
-# For windows
-$ npm run build:win
-
-# For macOS
-$ npm run build:mac
-
-# For Linux
-$ npm run build:linux
-```
+# Start the development server and open the app
+npm run dev
+\`\`\`
