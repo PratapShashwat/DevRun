@@ -1,6 +1,17 @@
 # 📦 StackStore
+
 **AI-Generated, OS-Level Development Environments.**
 *Built for the Microsoft AI Unlocked Hackathon.*
+
+---
+
+### 📄 [View the 6-Slide Presentation Deck (PDF)](./Devil2b_Prototype_StackStore_Track6.pdf)
+
+### 🎥 Watch the 3-Minute Demo Video:
+
+[![StackStore Demo Video](https://github.com/user-attachments/assets/ff50c906-b2f2-4aed-a432-cb2020c09311)](https://drive.google.com/file/d/1hTrT524S0nv1San7o3FBNvr0lfgwvCS4/view?usp=drivesdk)
+
+---
 
 ## 🛑 The Problem: Dependency Hell
 Modern software development is plagued by environment configuration. Reviewing a simple GitHub repository often requires hours of installing specific Node versions, resolving Python virtual environment conflicts, and hunting down missing API keys. 
