@@ -24,14 +24,21 @@ AZURE_OPENAI_DEPLOYMENT_NAME=your_model_deployment_name
 
 ### 2. Installation
 
-# Create and activate the virtual environment
-# Windows:
+ Create and activate the virtual environment
+ 
+**Windows:**
+```env
 python -m venv venv
 .\venv\Scripts\activate
+```
 
-# Linux/macOS:
+**Linux/macOS:**
+```env
 python3 -m venv venv
 source venv/bin/activate
+```
 
-# Install dependencies
+**Install dependencies**
+```env
 pip install -r requirements.txt
+```
