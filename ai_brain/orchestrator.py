@@ -6,94 +6,54 @@ load_dotenv()
 
 from google import genai
 from google.genai import types
-# from openai import AzureOpenAI
-SCHEMA_NAME = "schema_v1.json"
-def load_schema_template():
-    """Loads the schema template from the external JSON file."""
-    schema_path = os.path.join(os.path.dirname(__file__), SCHEMA_NAME)
-    try:
-        with open(schema_path, "r") as f:
-            return f.read()
-    except FileNotFoundError:
-        print("[!] Error: schema_v1.json file not found.")
-        return "{}"
 
-SYSTEM_PROMPT = f"""
-You are the AI Orchestrator for StackStore, a local desktop application that creates instant, isolated development environments using OS-level virtualization.
-Your task is to analyze raw configuration files from a GitHub repository and generate a strict "StackSpec" JSON configuration.
+SYSTEM_PROMPT = """
+You are the AI Orchestrator for StackStore, an intelligent DevSecOps tool.
+Your task is to analyze raw configuration files from a GitHub repository and generate the necessary configuration to spin up a secure, containerized development environment.
 
 RULES:
-1. You must output ONLY valid JSON. No markdown formatting, no explanations.
-2. The JSON must strictly adhere to the StackSpec v1.0 schema provided below.
-3. If a service requires compilation before running (e.g., React, C++), populate the "commands.build" field. Otherwise, set it to null.
-4. If you detect references to API keys in a README or .env, add them to "env_vars" but set their value to "<REQUIRED_USER_INPUT>".
+1. You must output ONLY valid JSON. No markdown formatting outside of the JSON structure.
+2. The Dockerfile MUST start exactly with: FROM stackstore-base:latest
+3. Do NOT install Python, Node.js, Java, or basic build tools in the Dockerfile. They are already in the base image. Only install project-specific dependencies (e.g., pip install, npm install).
+4. Extract any required environment variables or API keys from the code/README and list them in 'missing_env_keys'.
 
-SCHEMA TO FOLLOW:
-{load_schema_template()}
+OUTPUT SCHEMA:
+{
+  "project_name": "string",
+  "dockerfile": "string (the raw Dockerfile content)",
+  "devcontainer": "string (the raw devcontainer.json content)",
+  "missing_env_keys": ["string"]
+}
 """
 
 def generate_stack_spec(extracted_files_dict, repo_name):
-    user_content = f"Repository Name: {repo_name}\n\nExtracted Files:\n"
-    for filename, content in extracted_files_dict.items():
-        user_content += f"--- {filename} ---\n{content}\n\n"
-        
-    user_content += "Generate the StackSpec JSON matching the v1.0 schema:"
+    context_str = json.dumps(extracted_files_dict, indent=2)
 
-    # ==========================================
-    # CURRENT ENGINE: GOOGLE GEMINI (gemini-2.5-flash)
-    # ==========================================
+    user_content = f"Repository Name: {repo_name}\n\nExtracted Files:\n{context_str}\n\nGenerate the DevSecOps JSON payload."
+
     print("[*] Routing request to Gemini API (google-genai)...")
     
-    if not os.environ.get("GEMINI_API_KEY"):
-        print("[!] Error: GEMINI_API_KEY not found in .env file.")
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        print("STACKSTORE_ERROR: GEMINI_API_KEY not found in .env file.")
         return None
-        
+
     try:
-        client = genai.Client()
+        client = genai.Client(api_key=api_key)
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model='gemini-2.5-flash',
             contents=user_content,
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_PROMPT,
-                response_mime_type="application/json"
+                response_mime_type="application/json",
             )
         )
-        raw_json = response.text
+        
+        cleaned_text = response.text.replace('```json', '').replace('```', '').strip()
+        stack_spec_dict = json.loads(cleaned_text)
+        
+        return stack_spec_dict
         
     except Exception as e:
-        print(f"[!] API Call Failed: {e}")
-        return None
-
-    # ==========================================
-    # FUTURE ENGINE: AZURE OPENAI   (GPT-4o) 
-    # ==========================================
-    """
-    print("[*] Routing request to Azure OpenAI (GPT-4o)...")
-    try:
-        client = AzureOpenAI(
-            azure_endpoint=os.environ.get("AZURE_OPENAI_ENDPOINT"),
-            api_key=os.environ.get("AZURE_OPENAI_API_KEY"),
-            api_version="2024-02-15-preview"
-        )
-        
-        response = client.chat.completions.create(
-            model="gpt-4o", # Replace with your actual deployment name
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": user_content}
-            ],
-            response_format={ "type": "json_object" }
-        )
-        raw_json = response.choices[0].message.content
-        
-    except Exception as e:
-        print(f"[!] Azure API Call Failed: {e}")
-        return None
-    """
-
-    try:
-        return json.loads(raw_json)
-    except json.JSONDecodeError as e:
-        print(f"[!] Error: LLM did not return valid JSON. {e}")
-        print("Raw Output:\n", raw_json)
+        print(f"STACKSTORE_ERROR: LLM Generation failed: {str(e)}")
         return None

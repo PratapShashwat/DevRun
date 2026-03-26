@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import './Loader.css'
 
-export default function Loader() {
+// 1. Accept the 'message' prop from App.tsx
+export default function Loader({ message }) {
   const [phraseIndex, setPhraseIndex] = useState(0)
   
   const loadingPhrases = [
@@ -23,7 +24,12 @@ export default function Loader() {
   return (
     <div className="loader-container">
       <div className="spinner"></div>
-      <h2 className="loader-title">Analyzing Repository</h2>
+      
+      {/* 2. Swap the hardcoded text for our dynamic state message */}
+      <h2 className="loader-title" style={{ color: '#c9d1d9', marginBottom: '1rem' }}>
+        {message || "Analyzing Repository"}
+      </h2>
+      
       <div className="terminal-status">
         <span className="prompt">root@stackstore:~#</span>
         <span className="phrase">{loadingPhrases[phraseIndex]}</span>

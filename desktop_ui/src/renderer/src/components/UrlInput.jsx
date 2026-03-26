@@ -1,111 +1,74 @@
-import { useState, useEffect } from 'react'
-import './UrlInput.css'
+import React, { useState, useEffect } from 'react'
 
 export default function UrlInput({ onSubmit, onResume, externalError }) {
   const [url, setUrl] = useState('')
-  const [localError, setLocalError] = useState('')
   const [savedEnvs, setSavedEnvs] = useState([])
 
   useEffect(() => {
-    const loadEnvs = async () => {
-      const response = await window.api.getSavedEnvironments()
-      if (response.success) {
-        setSavedEnvs(response.data)
-      }
-    }
-    loadEnvs()
+    window.api.getSavedEnvironments().then(res => {
+      if (res.success) setSavedEnvs(res.data)
+    })
   }, [])
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (!url.includes('github.com/')) {
-      setLocalError('Please enter a valid GitHub repository URL.')
-      return
+  const handleSmartSubmit = (e) => {
+    e.preventDefault();
+
+    
+    const existingEnv = savedEnvs.find(env => env.github_url === url);
+
+    if (existingEnv) {
+      console.log("Existing environment found! Bypassing AI...");
+      onResume(existingEnv); 
+    } else {
+      onSubmit(url); 
     }
-    setLocalError('')
-    onSubmit(url) 
   }
 
-  const displayError = localError || externalError
-
   return (
-    <div className="url-input-container" style={{ justifyContent: 'flex-start', paddingTop: '10vh' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', padding: '20px' }}>
       
-      <div className="header">
-        <h1>StackStore</h1>
-        <p>Instant, AI-generated environments.</p>
+      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <h1 style={{ fontSize: '3rem', margin: '0 0 10px 0', color: '#ffffff', letterSpacing: '-1px' }}>StackStore</h1>
+        <p style={{ fontSize: '1.2rem', color: '#8b949e', margin: 0 }}>Instant AI-Orchestrated Dev Environments</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="input-form" style={{ marginBottom: '3rem' }}>
-        <input
-          type="url"
-          className="url-field"
-          placeholder="https://github.com/username/repo"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          required
-          autoFocus
-        />
-        <button type="submit" className="submit-btn">
-          Analyze Repo
-        </button>
-      </form>
-
-      {displayError && (
-        <div className="error-panel" style={{ marginTop: '-2rem', marginBottom: '2rem' }}>
-          <span style={{ marginRight: '8px' }}>⚠️</span> {displayError}
+      <div style={{ width: '100%', maxWidth: '600px', backgroundColor: '#161b22', border: '1px solid #30363d', borderRadius: '12px', padding: '30px', boxShadow: '0 8px 24px rgba(0,0,0,0.2)' }}>
+        <form onSubmit={handleSmartSubmit} style={{ display: 'flex', gap: '10px' }}>
+          <input 
+            type="url" 
+            placeholder="Paste a GitHub Repository URL..." 
+            value={url} 
+            onChange={e => setUrl(e.target.value)} 
+            required
+            style={{ flex: 1, padding: '14px', borderRadius: '6px', border: '1px solid #30363d', backgroundColor: '#0d1117', color: '#c9d1d9', fontSize: '1rem', outline: 'none' }}
+          />
+          <button type="submit" style={{ padding: '0 24px', borderRadius: '6px', border: 'none', backgroundColor: '#238636', color: 'white', fontSize: '1rem', fontWeight: 'bold', cursor: 'pointer', transition: 'background 0.2s' }}>
+            Initialize
+          </button>
+        </form>
+        <div style={{ marginTop: '20px', display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center' }}>
+          <span style={{ color: '#8b949e', fontSize: '0.85rem' }}>Or try a verified demo:</span>
+          <button
+            onClick={() => setUrl('https://github.com/bradtraversy/mern-tutorial')}
+            style={{ padding: '4px 12px', backgroundColor: '#21262d', color: '#58a6ff', border: '1px solid #30363d', borderRadius: '12px', fontSize: '0.8rem', cursor: 'pointer', transition: 'all 0.2s', fontWeight: '500' }}
+            onMouseOver={(e) => { e.target.style.borderColor = '#58a6ff'; e.target.style.backgroundColor = '#30363d'; }}
+            onMouseOut={(e) => { e.target.style.borderColor = '#30363d'; e.target.style.backgroundColor = '#21262d'; }}
+          >
+            React/Node MERN Stack
+          </button>
         </div>
-      )}
+        {externalError && <div style={{ color: '#ff7b72', marginTop: '15px', fontSize: '0.9rem', textAlign: 'center' }}>{externalError}</div>}
+      </div>
 
       {savedEnvs.length > 0 && (
-        <div style={{ 
-          width: '100%', 
-          maxWidth: '600px', 
-          borderTop: '1px solid #30363d', 
-          paddingTop: '2rem',
-          display: 'flex',
-          flexDirection: 'column',
-          flex: 1,          
-          minHeight: 0,     
-          paddingBottom: '2rem'
-        }}>
-          <h3 style={{ color: '#8b949e', marginBottom: '1rem', flexShrink: 0 }}>Saved Workspaces</h3>
-          
-          <div className="scrollable-form" style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: '1rem',
-            overflowY: 'auto',
-            flex: 1,        
-            paddingRight: '8px'
-          }}>
-            {savedEnvs.map((env, index) => (
-              <div 
-                key={index} 
-                style={{ 
-                  backgroundColor: '#161b22', 
-                  border: '1px solid #30363d', 
-                  borderRadius: '8px', 
-                  padding: '1rem 1.5rem',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  flexShrink: 0 
-                }}
-              >
-                <div>
-                  <strong style={{ fontSize: '1.1rem', color: '#c9d1d9' }}>{env.project_name}</strong>
-                  <div style={{ color: '#8b949e', fontSize: '0.85rem', marginTop: '4px' }}>
-                    {env.services?.[0]?.runtime?.language || 'Unknown'} • {env.workspace?.network?.exposed_ports?.length || 0} Ports
-                  </div>
-                </div>
-                
-                <button 
-                  className="submit-btn" 
-                  style={{ backgroundColor: '#21262d', border: '1px solid #30363d', padding: '0.5rem 1rem' }}
-                  onClick={() => onResume(env)}
-                >
-                  ▶ Resume
+        <div style={{ width: '100%', maxWidth: '600px', marginTop: '30px' }}>
+          <h3 style={{ color: '#8b949e', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', borderBottom: '1px solid #30363d', paddingBottom: '10px', marginBottom: '15px' }}>Active Sandboxes</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '300px', overflowY: 'auto', paddingRight: '5px' }}>
+            {savedEnvs.map((env, idx) => (
+              <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#161b22', border: '1px solid #30363d', padding: '15px 20px', borderRadius: '8px' }}>
+                <span style={{ fontWeight: '600', color: '#58a6ff' }}>{env.project_name}</span>
+                <button onClick={() => onResume(env)} style={{ padding: '8px 16px', borderRadius: '4px', border: '1px solid #30363d', backgroundColor: '#21262d', color: '#c9d1d9', cursor: 'pointer', fontWeight: 'bold' }}>
+                  Resume
                 </button>
               </div>
             ))}
