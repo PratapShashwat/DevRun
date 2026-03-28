@@ -41,12 +41,23 @@ function App() {
     }
   }
 
-  const handleResume = async (savedSpec) => {
+  const handleResume = async (env) => {
     setLoadingText('Waking up secure sandbox...')
-    setCurrentStep('loading') 
-    await window.api.wakeContainer(savedSpec.project_name)
-    setStackSpec(savedSpec)
-    setCurrentStep('booting') 
+    setCurrentStep('loading')
+    
+  
+    const response = await window.api.wakeContainer(env.project_name)
+    
+    if (response.success) {
+      
+      setStackSpec(env)
+      setCurrentStep('booting') 
+    } else {
+      console.log("[SYSTEM] Container missing. Forcing fresh rebuild...")
+      setBackendError("Previous container was lost. Rebuilding fresh environment...")
+      
+      handleUrlSubmit(env.github_url)
+    }
   }
 
   const handleLaunch = async (finalSpec) => {

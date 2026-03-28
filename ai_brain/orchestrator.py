@@ -14,11 +14,12 @@ Your task is to analyze raw configuration files from a GitHub repository and gen
 RULES:
 1. You must output ONLY valid JSON. No markdown formatting outside of the JSON structure.
 2. The Dockerfile MUST start exactly with: FROM stackstore-base:latest
-3. Do NOT install Python, Node.js, Java, or basic build tools in the Dockerfile. They are already in the base image. Only install project-specific dependencies (e.g., pip install, npm install).
-4. Extract any required environment variables or API keys from the code/README and list them in 'missing_env_keys'.
+3. Base Environment Constraints: The base image contains core languages (Python, Node, Java) but lacks OS-level utilities (curl, unzip, git) and modern package managers (uv, bun, pnpm, poetry). 
+4. Installation Mandate: You MUST install required OS utilities first (e.g., 'RUN apt-get update && apt-get install -y curl unzip'). THEN install required package managers. For pip, use the override flag ('RUN pip install uv --break-system-packages'). For Bun, remember its installer requires 'unzip'. 
+5. Extract any required environment variables or API keys from the code/README and list them in 'missing_env_keys'.
 
 OUTPUT SCHEMA:
-{
+{s
   "project_name": "string",
   "dockerfile": "string (the raw Dockerfile content)",
   "devcontainer": "string (the raw devcontainer.json content)",
