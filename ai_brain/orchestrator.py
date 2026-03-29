@@ -47,6 +47,7 @@ def generate_stack_spec(extracted_files_dict, repo_name):
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_PROMPT,
                 response_mime_type="application/json",
+                temperature=0.0,
             )
         )
         
