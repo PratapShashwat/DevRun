@@ -9,7 +9,7 @@
 
 ### 🎥 Watch the 3-Minute Demo Video:
 
-[![StackStore Demo Video](https://github.com/user-attachments/assets/ff50c906-b2f2-4aed-a432-cb2020c09311)]([https://drive.google.com/file/d/1t2q4vVAz84CTT1ku14foLmWAWiHlzh4j/view?usp=drivesdk))
+[![StackStore Demo Video](https://github.com/user-attachments/assets/ff50c906-b2f2-4aed-a432-cb2020c09311)](https://drive.google.com/file/d/1t2q4vVAz84CTT1ku14foLmWAWiHlzh4j/view?usp=drivesdk)
 
 ---
 
