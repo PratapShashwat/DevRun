@@ -7,7 +7,7 @@
 
 ### 📄 [View the 8-Slide Presentation Deck (PDF)](./Devil2b_FinalPrototype_StackStore_Track6.pdf)
 
-### 🎥 Watch the 3-Minute Demo Video:
+### 🎥 Watch the 5-Minute Demo Video:
 
 [![StackStore Demo Video](https://github.com/user-attachments/assets/ff50c906-b2f2-4aed-a432-cb2020c09311)](https://drive.google.com/file/d/1t2q4vVAz84CTT1ku14foLmWAWiHlzh4j/view?usp=drivesdk)
 
