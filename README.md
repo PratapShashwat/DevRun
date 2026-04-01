@@ -23,7 +23,7 @@ Existing solutions are insufficient:
 ## 💡 The Solution
 StackStore completely eliminates local configuration by acting as an automated DevSecOps engineer. A developer simply pastes a repository URL into the StackStore client. 
 
-Our AI Orchestrator utilizes the rapid reasoning capabilities of **Azure OpenAI (GPT-4o)** to analyze the codebase, infer the exact runtime requirements, catch missing secrets, and output a strict Docker configuration blueprint. Our Electron backend then takes over, communicating directly with the local Docker Desktop daemon to instantly build and boot a zero-dependency, securely isolated execution environment. 
+Our AI Orchestrator utilizes the rapid reasoning capabilities of **Azure OpenAI (GPT-4o) / Gemini-2.5-Flash** to analyze the codebase, infer the exact runtime requirements, catch missing secrets, and output a strict Docker configuration blueprint. Our Electron backend then takes over, communicating directly with the local Docker Desktop daemon to instantly build and boot a zero-dependency, securely isolated execution environment. 
 
 Code stays on your local hard drive; the execution engine lives entirely in the sandbox.
 
