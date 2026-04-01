@@ -5,7 +5,7 @@ The `ai_brain` is the intelligence layer of the StackStore microservice ecosyste
 
 ## How It Works
 1. **Ingestion (`fetcher.py`):** Uses the public GitHub API to fetch essential configuration files (e.g., `package.json`, `requirements.txt`) without cloning the entire repository.
-2. **Analysis (`main.py`):** Prompts the Azure OpenAI model (GPT-4o) to analyze the architecture, detect required environments, and catch missing secrets/API keys.
+2. **Analysis (`main.py`):** Prompts the Azure OpenAI model (GPT-4o)/ Gemini (2.5-Flash) to analyze the architecture, detect required environments, and catch missing secrets/API keys.
 3. **Spec Generation:** Outputs a strict JSON blueprint containing a custom `Dockerfile` and setup instructions, which is then consumed by the Electron backend to build the environment.
 
 ## Setup & Execution
